@@ -70,18 +70,20 @@ const initialPrompt = () => {
     });
 };
 
+// View departments function
 const viewAllDepartments = () => {
-    const sql = `SELECT id, name AS department FROM department`;
+  const sql = `SELECT id, name AS department FROM department`;
 
-    db.query(sql, (err, result) => {
-        if (err) throw err;
-        console.table(result);
-        initialPrompt();
-    });
+  db.query(sql, (err, result) => {
+    if (err) throw err;
+    console.table(result);
+    initialPrompt();
+  });
 };
 
+// View roles function
 const viewAllRoles = () => {
-    const sql = `SELECT
+  const sql = `SELECT
                  role.id,
                  role.title AS "Title",
                  role.salary AS "Salary",
@@ -89,15 +91,16 @@ const viewAllRoles = () => {
                  FROM role
                  LEFT JOIN department ON role.department_id = department.id`;
 
-    db.query(sql, (err, result) => {
-        if (err) throw err;
-        console.table(result);
-        initialPrompt();
-    });
+  db.query(sql, (err, result) => {
+    if (err) throw err;
+    console.table(result);
+    initialPrompt();
+  });
 };
 
+// View employee function
 const viewAllEmployees = () => {
-    const sql = `SELECT employee.id,
+  const sql = `SELECT employee.id,
                  employee.first_name AS "First Name",
                  employee.last_name AS "Last Name",
                  role.title AS "Title",
@@ -111,11 +114,179 @@ const viewAllEmployees = () => {
                  ORDER BY employee.id;
                  `;
 
-    db.query(sql, (err, result) => {
+  db.query(sql, (err, result) => {
+    if (err) throw err;
+    console.table(result);
+    initialPrompt();
+  });
+};
+
+// Add department function
+const addDepartment = () => {
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "departmentName",
+        message: "What department would you like to add?",
+      },
+    ])
+    .then((answer) => {
+      const sql = `INSERT INTO department (name) VALUES (?)`;
+
+      db.query(sql, (err, result) => {
         if (err) throw err;
-        console.table(result);
+        console.log(
+          `You have entered ${answer.departmentName} into the database.`
+        );
         initialPrompt();
+      });
     });
+};
+
+// Add role function
+const addRole = () => {
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "addRole",
+        message: "What role would you like to add?",
+      },
+      {
+        type: "input",
+        name: "roleSalary",
+        message: "What is the salary for this role?",
+      },
+      {
+        type: "input",
+        name: "roleDepartment",
+        message: "What is this role's department ID?",
+      },
+    ])
+    .then((answer) => {
+      const sql = `INSERT INTO role SET ?`;
+
+      db.query(
+        sql,
+        {
+          title: answer.addRole,
+          salary: answer.roleSalary,
+          department_id: answer.roleDepartment,
+        },
+        (err, result) => {
+          if (err) throw err;
+          console.log(`You have entered ${answer.addRole} into the database.`);
+          initialPrompt();
+        }
+      );
+    });
+};
+
+// Add employee function
+const addEmployee = () => {
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "employeeFirstName",
+        message: "What is the new employee's first name?",
+      },
+      {
+        type: "input",
+        name: "employeeLastName",
+        message: "what is the new employee's last name?",
+      },
+      {
+        type: "input",
+        name: "employeeRole",
+        message: "What is the new employee's role ID?",
+      },
+      {
+        type: "input",
+        name: "employeeManagerID",
+        message: "What is the new employee's manager ID?",
+      },
+    ])
+    .then((answer) => {
+      const sql = `INSERT INTO employee SET ?`;
+
+      db.query(
+        sql,
+        {
+          first_name: answer.employeeFirstName,
+          last_name: answer.employeeLastName,
+          role_id: answer.employeeRole,
+          manager_id: answer.employeeManagerID,
+        },
+        (err, result) => {
+          if (err) throw err;
+          console.log(
+            `You have entered ${answer.employeeFirstName} ${answer.employeeLastName} into the database.`
+          );
+          initialPrompt();
+        }
+      );
+    });
+};
+
+// Update employee role function
+const updateEmployeeRole = () => {
+  const employeeArray = [];
+  const roleArray = [];
+
+  db.query(
+    `SELECT CONCAT (employee.first_name, " ", employee.last_name) AS employee from employee_tracker.employee`,
+    (err, result) => {
+      if (err) throw err;
+      for (let i = 0; i < result.length; i++) {
+        employeeArray.push(result[i].employee);
+      }
+      db.query(`SELECT title from employee_tracker.role`, (err, result) => {
+        if (err) throw err;
+        for (let i = 0; i < result.length; i++) {
+          roleArray.push(result[i].title);
+        }
+        inquirer
+          .prompt([
+            {
+              type: "list",
+              name: "name",
+              message: "Whose role would you like to change?",
+              choices: employeeArray,
+            },
+            {
+              type: "list",
+              name: "role",
+              message: "What would you like their new role to be?",
+              choices: roleArray,
+            },
+          ])
+          .then((answers) => {
+            let currentRole;
+            const name = answers.name.split(" ");
+
+            db.query(
+              `SELECT id FROM employee_tracker.role WHERE title = "${answers.role}"`,
+              (err, result) => {
+                if (err) throw err;
+                for (let i = 0; i < result.length; i++) {
+                  currentRole = result[i].id;
+                }
+                db.query(
+                  `UPDATE employee_tracker.employee SET role_id = "${currentRole}" WHERE first_name = "${name[0]}"`,
+                  (err, result) => {
+                    if (err) throw err;
+                    console.log("You have successfully updated the role");
+                    initialPrompt();
+                  }
+                );
+              }
+            );
+          });
+      });
+    }
+  );
 };
 
 // Default response for any other request (Not Found)
