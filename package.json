@@ -1,0 +1,30 @@
+{
+  "name": "employee-tracker",
+  "version": "1.0.0",
+  "description": "NOTE: The contents of inputCheck.js were pulled directly from the module work for this week. I don't know if I will need to use it, but I pulled it over so that if I do need it, it's already there.",
+  "main": "server.js",
+  "dependencies": {
+    "console.table": "^0.10.0",
+    "express": "^4.17.1",
+    "inquirer": "^8.1.2",
+    "jest": "^27.0.6",
+    "mysql2": "^2.3.0",
+    "nodemon": "^2.0.12"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "jest",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KevinFromConn/employee-tracker.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/KevinFromConn/employee-tracker/issues"
+  },
+  "homepage": "https://github.com/KevinFromConn/employee-tracker#readme"
+}
