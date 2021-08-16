@@ -18,27 +18,28 @@ VALUES (4, "Legal");
 
 INSERT INTO role (title, salary, department_id)
 VALUES
-("CEO", 500000.00, 1),
+("CEO", 500000.00, NULL),
 ("Lead Engineer", 250000.00, 2),
 ("Engineer", 150000.00, 2),
-("Legal Team Lead", 125000.00, 3),
-("Lawyer", 110000.00, 3),
-("Sales Lead", 85000.00, 4),
-("Salesperson", 60000.00, 4),
-("Finance Lead", 150000.00, 5),
-("Accountant", 100000.00, 5);
+("Legal Team Lead", 125000.00, 4),
+("Lawyer", 110000.00, 4),
+("Sales Lead", 85000.00, 1),
+("Salesperson", 60000.00, 1),
+("Finance Lead", 150000.00, 3),
+("Accountant", 100000.00, 3);
 
 -- Employee Seeds --
 
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
 VALUES
-("John", "Doe", 1, NULL),
-("Mike", "Chan", 1, 1),
-("Ashley", "Rodriguez", 2, NULL),
-("Kevin", "Tupik", 2. 3),
-("Elzar", "Mann", 1, 1),
-("Malia", "Brown", 3, NULL),
-("Sarah", "Lourd", 4, NULL),
-("Tom", "Allen", 4, 7),
-("Reath", "Silas", 3, 6),
-("Tammer", "Galal", 2, 3);
+("John", "Doe", 6, NULL),
+("Mike", "Chan", 2, NULL),
+("Ashley", "Rodriguez", 3, 2),
+("Kevin", "Tupik", 3, 2),
+("Elzar", "Mann", 5, 6),
+("Malia", "Brown", 4, NULL),
+("Sarah", "Lourd", 5, 6),
+("Tom", "Allen", 7, 1),
+("Reath", "Silas", 8, NULL),
+("Tammer", "Galal", 9, 9),
+("Rudy", "Rutabaga", 1, NULL);

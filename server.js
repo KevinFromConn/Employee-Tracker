@@ -3,7 +3,6 @@ const express = require("express");
 const db = require("./db/connection");
 const table = require("console.table");
 const inquirer = require("inquirer");
-const { addSnapshotSerializer } = require("expect");
 
 const PORT = process.env.PORT || 3001;
 const app = express();
@@ -105,8 +104,8 @@ const viewAllEmployees = () => {
                  employee.last_name AS "Last Name",
                  role.title AS "Title",
                  department.name AS "Department",
-                 role.salary AS "Salary,
-                 CONCAT (e.first_name, " ", e.last_name) AS "Manager"
+                 role.salary AS "Salary",
+                 CONCAT(e.first_name, " ", e.last_name) AS "Manager"
                  FROM employee
                  INNER JOIN role ON employee.role_id = role.id
                  LEFT JOIN department ON role.department_id = department.id
@@ -134,7 +133,7 @@ const addDepartment = () => {
     .then((answer) => {
       const sql = `INSERT INTO department (name) VALUES (?)`;
 
-      db.query(sql, (err, result) => {
+      db.query(sql, answer.departmentName, (err, result) => {
         if (err) throw err;
         console.log(
           `You have entered ${answer.departmentName} into the database.`
@@ -300,5 +299,6 @@ db.connect((err) => {
   console.log("Database connected.");
   app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
+    initialPrompt();
   });
 });
